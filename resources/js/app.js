@@ -15,6 +15,11 @@ Vue.component(
     require("./components/Layouts/Base.vue").default
 );
 
+Vue.component(
+    "home-component",
+    require("./components/Another/Home.vue").default
+);
+
 Vue.use(Vuetify);
 
 window.axios = require("axios");

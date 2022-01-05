@@ -17,7 +17,7 @@ class CreateConditionsTable extends Migration
             $table->id();
             $table->string('user_id');
             $table->string('temperature');
-            $table->string('rating');
+            $table->integer('rating');
             $table->string('time');
             $table->timestamps();
         });

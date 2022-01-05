@@ -3,10 +3,12 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-import index from "./components/index.vue";
 import Condition from "./components/Condition.vue";
 import Month from "./components/Month.vue";
+import Year from "./components/Year.vue";
 import Schedule from "./components/Schedule.vue";
+import Setting from "./components/Setting.vue";
+import Use from "./components/Use.vue";
 
 const router = new VueRouter({
     mode: "history",
@@ -14,7 +16,7 @@ const router = new VueRouter({
         {
             path: "/home",
             name: "index",
-            component: index,
+            component: Schedule,
         },
         {
             path: "/home/condition",
@@ -27,9 +29,19 @@ const router = new VueRouter({
             component: Month,
         },
         {
-            path: "/home/schedule",
-            name: "Schedule",
-            component: Schedule,
+            path: "/home/year",
+            name: "Year",
+            component: Year,
+        },
+        {
+            path: "/home/setting",
+            name: "Setting",
+            component: Setting,
+        },
+        {
+            path: "/home/use",
+            name: "Use",
+            component: Use,
         },
     ],
 });

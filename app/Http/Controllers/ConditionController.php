@@ -13,13 +13,19 @@ class ConditionController extends Controller
     {
         $id = Auth::id();
 
-        $data = Condition::where("user_id", $id)->paginate(30);
+        $data = Condition::where("user_id", $id)->orderBy('time', 'DESC')->paginate(30);
         $count = Condition::where("user_id", $id)->count();
         return response()->json(["data" => $data, "count" => $count]);
     }
 
     function create(Request $request)
     {
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'temperature' => 'required|numeric',
+            'rating' => 'required|integer'
+        ]);
+
         $id = Auth::id();
         $date = $request->date;
         $temperature = $request->temperature;
@@ -33,7 +39,7 @@ class ConditionController extends Controller
         ]);
 
 
-        $data = Condition::where("user_id", $id)->paginate(30);
+        $data = Condition::where("user_id", $id)->orderBy('time', 'DESC')->paginate(30);
         $count = Condition::where("user_id", $id)->count();
         return response()->json(["data" => $data, "count" => $count]);
     }
@@ -45,7 +51,7 @@ class ConditionController extends Controller
 
         Condition::where("user_id", $user_id)->where("id", $id)->delete();
 
-        $data = Condition::where("user_id", $user_id)->paginate(30);
+        $data = Condition::where("user_id", $user_id)->orderBy('time', 'DESC')->paginate(30);
         $count = Condition::where("user_id", $user_id)->count();
         return response()->json(["data" => $data, "count" => $count]);
     }
@@ -54,8 +60,19 @@ class ConditionController extends Controller
     {
         $requestdate = $request->date;
         $date = explode("-", $requestdate);
+        $user_id = Auth::id();
 
-        $data = Condition::whereYear('created_at', '=', $date[0])->whereMonth('created_at', '=', $date[1])->orderBy('time', 'ASC')->get();
+        $data = Condition::where("user_id", $user_id)->whereYear('created_at', '=', $date[0])->whereMonth('created_at', '=', $date[1])->orderBy('time', 'ASC')->get();
+
+        return response()->json($data);
+    }
+
+    function year(Request $request)
+    {
+        $date = $request->date;
+        $user_id = Auth::id();
+
+        $data = Condition::where("user_id", $user_id)->whereYear('created_at', '=', $date)->orderBy('time', 'ASC')->get();
 
         return response()->json($data);
     }

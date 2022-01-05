@@ -10,6 +10,14 @@ class ScheduleController extends Controller
 {
     function create(Request $request)
     {
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'start' => 'required|date_format:H:i',
+            'end' => 'required|date_format:H:i|after:start',
+            'text' => 'required|string'
+        ]);
+
+
         $id = Auth::id();
         $date = $request->date;
         $start = $request->start;
@@ -36,6 +44,13 @@ class ScheduleController extends Controller
     }
 
     function get()
+    {
+        $id = Auth::id();
+        $data = schedule::select("id", "start", "end", "name")->where("user_id", $id)->get();
+        return response()->json($data);
+    }
+
+    function year()
     {
         $id = Auth::id();
         $data = schedule::select("id", "start", "end", "name")->where("user_id", $id)->get();

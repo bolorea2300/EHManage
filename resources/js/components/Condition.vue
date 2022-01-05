@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-btn block @click="addbutton"> 追加 </v-btn>
+        <v-btn class="mb-10" block @click="addbutton"> 追加 </v-btn>
 
         <v-row>
             <v-col v-for="(list, n) in data" :key="n" cols="12" sm="6" md="4">
@@ -10,11 +10,13 @@
                         <h3>体温</h3>
                         <p>{{ list.temperature }}℃</p>
                         <h3>体調</h3>
+
                         <v-rating
-                            :value="list.rating"
+                            :value="parseInt(list.rating)"
                             background-color="orange lighten-3"
-                            color="orange"
+                            :color="color(list.rating)"
                             large
+                            readonly
                         ></v-rating>
                     </v-card-text>
 
@@ -46,14 +48,20 @@
                         <template v-slot:activator="{ on, attrs }">
                             <v-text-field
                                 v-model="date"
-                                label="Picker in menu"
+                                label="日付"
                                 prepend-icon="mdi-calendar"
                                 readonly
                                 v-bind="attrs"
                                 v-on="on"
                             ></v-text-field>
                         </template>
-                        <v-date-picker v-model="date" no-title scrollable>
+                        <v-date-picker
+                            v-model="date"
+                            no-title
+                            scrollable
+                            locale="jp-ja"
+                            :day-format="(date) => new Date(date).getDate()"
+                        >
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="menu = false">
                                 Cancel
@@ -69,6 +77,7 @@
                     </v-menu>
                     <v-text-field
                         v-model="temperature"
+                        placeholder="数字・小数点のみ入力可"
                         label="体温"
                         required
                     ></v-text-field>
@@ -77,13 +86,15 @@
                     <v-rating
                         v-model="rating"
                         background-color="orange lighten-3"
-                        color="orange"
+                        :color="color(rating)"
                         large
                     ></v-rating>
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-btn block @click="add"> 追加 </v-btn>
+                    <v-btn block @click="add" v-bind:disabled="check">
+                        追加
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -185,6 +196,15 @@ export default {
                     );
                 });
         },
+        color: function (str) {
+            if (str >= 5) {
+                return "orange";
+            } else if (str >= 3 && str <= 4) {
+                return "green";
+            } else {
+                return "purple";
+            }
+        },
     },
     watch: {
         page: function (newVal) {
@@ -199,6 +219,20 @@ export default {
                         "エラーが発生しました。\n時間をおいてやり直してください。"
                     );
                 });
+        },
+    },
+    computed: {
+        check: function () {
+            if (
+                this.date &&
+                this.rating &&
+                this.temperature &&
+                this.temperature.match(/^[-]?([1-9]\d*|0)(\.\d+)?$/)
+            ) {
+                return false;
+            } else {
+                return true;
+            }
         },
     },
 };
