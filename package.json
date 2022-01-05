@@ -32,7 +32,10 @@
         "vue-router": "^3.5.3",
         "vuetify": "^2.6.1"
     },
+<<<<<<< HEAD
     "engines": {
         "node": "14.x"
     }
+=======
+>>>>>>> a29a3b5151a75adb53afe8cda4413cd577d83695
 }
